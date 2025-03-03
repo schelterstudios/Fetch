@@ -9,9 +9,18 @@ import SwiftUI
 
 @main
 struct FetchAppApp: App {
+<<<<<<< HEAD
     var body: some Scene {
         WindowGroup {
             ContentView()
+=======
+    
+    private let recipesViewModel = RecipesViewModel(RecipeService.shared)
+    
+    var body: some Scene {
+        WindowGroup {
+            RecipesView(viewModel: recipesViewModel)
+>>>>>>> a263706 (Initial Commit)
                 .environment(ImageCache())
         }
     }

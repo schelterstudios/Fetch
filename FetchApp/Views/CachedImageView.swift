@@ -15,6 +15,7 @@ final class ImageCache {
         case loaded(Image)
     }
     
+<<<<<<< HEAD
     private var map: [URL: ImagePhase] = [:]
     
     private func loadImage(from url: URL) {
@@ -23,6 +24,23 @@ final class ImageCache {
             let r = try await URLSession.shared.data(from: url)
             guard let uiImage = UIImage(data: r.0) else { return }
             let image = Image(uiImage: uiImage)
+=======
+    private let fetcher: ImageFetcher
+    private var map: [URL: ImagePhase] = [:]
+    
+    init(_ fetcher: ImageFetcher) {
+        self.fetcher = fetcher
+    }
+    
+    init() {
+        self.fetcher = URLImageFetcher()
+    }
+    
+    private func loadImage(from url: URL) {
+        guard map[url] == nil else { return }
+        Task {
+            let image = try await fetcher.fetchImage(from: url)
+>>>>>>> a263706 (Initial Commit)
             map[url] = .loaded(image)
         }
     }
@@ -41,6 +59,23 @@ final class ImageCache {
     }
 }
 
+<<<<<<< HEAD
+=======
+protocol ImageFetcher {
+    func fetchImage(from url: URL) async throws -> Image
+}
+
+private struct URLImageFetcher: ImageFetcher {
+    func fetchImage(from url: URL) async throws -> Image {
+        let r = try await URLSession.shared.data(from: url)
+        guard let uiImage = UIImage(data: r.0) else {
+            throw URLError(.badServerResponse)
+        }
+        return Image(uiImage: uiImage)
+    }
+}
+
+>>>>>>> a263706 (Initial Commit)
 struct CachedImageView<Content: View, P: View>: View {
     
     private let url: URL
